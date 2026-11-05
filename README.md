@@ -6,6 +6,8 @@
 -Note:Đây là write up thứ hai của mình trong hành trình thi đấu ```ctf``` nói chung và ```pwnable``` nói riêng. Một công cụ hay một nền tảng để luyện tập là vô cùng cần thiết, do đó mình sẽ chọn hoàn thành các level của ```pwn college```, cung cấp các bài học rất trực quan  dễ tiếp cận cho người mới bắt đầu. Hy vọng bài viết này sẽ cung cấp tư liệu tốt cho mọi người tham khảo.
 
 
+![](IMG/img1)
+
 
 Và trước khi bắt đầu mình có 1 vài docs và video liên quan đến Assembly các bạn có thể đọc thử tại đây:
 - [LiveOverflow](https://www.youtube.com/watch?v=iyAyN3GFM7A&list=PLhixgUqwRTjxglIswKp9mpkfPNfHkzyeN&index=1)
