@@ -16,3 +16,61 @@ Và trước khi bắt đầu mình có 1 vài docs và video liên quan đến 
 - [Architecture 1001: x86-64 Assembly](https://ost2.fyi/Arch1001)
 - [x86_64 assembly book](https://open.umn.edu/opentextbooks/textbooks/733)
 - ...vv
+
+Và để thuận tiện trong quá trình giải các level thì mình sẽ dùng một ``` suorce code``` chung cho các scripts bằng ```python```, kết hợp với pwntool. Cụ thể :
+```python
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+    Code here
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+```
+- Dòng code đầu ``` import pwn``` có nghĩa là truyền thư viện ```pwntool``` vào file scripts.
+- Dòng code thứ 2 ```pwn.context.update(arch="amd64")```có nghĩa là khai báo kiến trúc máy tính là ```64-bit(amd64)``` để pwntool biết cách biên dịch Assembly chính xác.
+- Dòng code thứ 3 ```output = pwn.process("/challenge/run")``` có nghĩa là khởi động chương trình ```/challenge/run``` thành một tiến trình.
+- Dòng code thứ 4 ```asm = " mình sẽ input vào các lệnh theo đề Assembly"```.
+- Dòng code thứ 5 ```output.write(pwn.asm(asm))``` có nghĩa là hàm ```(pwn.asm(asm))```biên dịch đoạn mã Assembly thành mã máy dạng byte, sau đó gửi thẳng vào chương trình đang chạy.
+- Dòng code thứ 6 ```print(output.readalls(())``` có nghĩa là đọc toàn bộ phản hồi từ chương trình(Kết quả kiểm tra và Flag) rồi in ra màn hình.
+
+  
+  ### Level 1 - set-register.
+  - 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
