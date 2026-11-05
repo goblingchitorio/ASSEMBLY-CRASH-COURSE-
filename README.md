@@ -3,6 +3,7 @@
 - **Category:** Programming languages
 - **Difficulty:** Easy
 - **Source**: [pwn.college](https://pwn.college/computing-101/assembly-crash-course/)
+  
 -Note:Đây là write up thứ hai của mình trong hành trình thi đấu ```ctf``` nói chung và ```pwnable``` nói riêng. Một công cụ hay một nền tảng để luyện tập là vô cùng cần thiết, do đó mình sẽ chọn hoàn thành các level của ```pwn college```, cung cấp các bài học rất trực quan  dễ tiếp cận cho người mới bắt đầu. Hy vọng bài viết này sẽ cung cấp tư liệu tốt cho mọi người tham khảo.
 
 
