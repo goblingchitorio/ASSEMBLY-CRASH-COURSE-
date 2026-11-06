@@ -44,8 +44,7 @@ print(output.readallS())
 
   #### Lời giải
   Áp dụng soucre trên mình chỉ cần điền nội dung mà mình muốn thực hiện ở ```dòng code thứ 4```. Dựa vào đề bài mình có được thanh ghi ```rdi``` là một dạng truyền tham số ban đầu vào khi gọi hàm hoặc hệ thống. hương đi của mình là cần truyền dữ liệu đầu vào lên thanh ghi ```rdi```, dữ liệu đầu vào ở level nàylà ```0x1337```. Trước tiên mình cần tạo một file bash và cấp quyền cho nó. Tiếp theo mình dùng lệnh ```nano``` để ghi đề source code trên vào file bash vừa tạo. Cụ thể:
-  
-  ```python
+```
 import pwn
 
 pwn.context.update(arch="amd64")
@@ -59,9 +58,45 @@ output.write(pwn.asm(asm))
 print(output.readallS())
 
 ```
+---
+## Flag 
+pwn.college{wEaueXOqiFTYemitXmjoPn2tIje.dRTOxwCM2EDOzIzW}.
 
+---
 
+### Level 2 Set-mutiple-registers
+Ở level này mình sẽ làm việc trên thanh ghi. Mình sẽ sửa đổi hoặc đọc các thanh ghi. Ở level này, mình sẽ làm việc với nhiều thanh ghi. Vui lòng thiết lập các mục sau:
+- rax = 0x1337
+- r12 = 0xCAFED00D1337BEEF
+- rsp = 0x31337
 
+#### lời giải 
+Bài này mình lệnh ```mov```(move) để gán các giá trị cho thanh ghi ```rax,r12,rsp```. Cụ thể:
+
+```
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+    mov rax , 0x1337
+    mov r12 ,  0xCAFED00D1337BEEF
+    mov rsp , 0x31337
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+
+```
+
+---
+#### Flag
+pwn.college{0Uhpj52EByMI2tP0lo_5afglR28.QXwEDOzwCM2EDOzIzW}
+
+--- 
+
+### Level 3 Add to register
 
 
 
