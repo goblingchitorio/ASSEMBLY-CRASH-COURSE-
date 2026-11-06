@@ -7,7 +7,7 @@
 -Note:Đây là write up thứ hai của mình trong hành trình thi đấu ```ctf``` nói chung và ```pwnable``` nói riêng. Một công cụ hay một nền tảng để luyện tập là vô cùng cần thiết, do đó mình sẽ chọn hoàn thành các level của ```pwn college```, cung cấp các bài học rất trực quan  dễ tiếp cận cho người mới bắt đầu. Hy vọng bài viết này sẽ cung cấp tư liệu tốt cho mọi người tham khảo.
 
 
-![](IMG/img1.jpg)
+![](IMG/img2.jpg)
 
 
 Và trước khi bắt đầu mình có 1 vài docs và video liên quan đến Assembly các bạn có thể đọc thử tại đây:
@@ -43,8 +43,22 @@ print(output.readallS())
   Ở level này mình sẽ làm việc với thanh ghi ```registers``` bạn sẽ dược sửa đổi hoặc đọc các thanh ghi. Vui lòng hãy thiết lập các mục sau: ```rdi = 0x1337```.
 
   #### Lời giải
-  Áp dụng soucre trên mình chỉ cần điền nội dung mà mình muốn thực hiện ở ```dòng code thứ 4```. Dựa vào đề bài mình có được thanh ghi ```rdi``` là một dạng truyền tham số ban đầu vào khi gọi hàm hoặc hệ thống. hương đi của mình là cần truyền dữ liệu đầu vào lên thanh ghi ```rdi```, dữ liệu đầu vào ở level nàylà ```0x1337```. Trước tiên mình cần tạo một 
-  - 
+  Áp dụng soucre trên mình chỉ cần điền nội dung mà mình muốn thực hiện ở ```dòng code thứ 4```. Dựa vào đề bài mình có được thanh ghi ```rdi``` là một dạng truyền tham số ban đầu vào khi gọi hàm hoặc hệ thống. hương đi của mình là cần truyền dữ liệu đầu vào lên thanh ghi ```rdi```, dữ liệu đầu vào ở level nàylà ```0x1337```. Trước tiên mình cần tạo một file bash và cấp quyền cho nó. Tiếp theo mình dùng lệnh ```nano``` để ghi đề source code trên vào file bash vừa tạo. Cụ thể:
+  
+  ```python
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+    mov rdi , 0x1337
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+
+```
 
 
 
