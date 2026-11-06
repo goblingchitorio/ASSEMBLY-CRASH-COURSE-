@@ -1,4 +1,4 @@
-﻿# Assembly Crash Course
+﻿# Assembly Crash Course pwn.college Archives.
  - **Challenge:** Assembly Level 1 -> 30
 - **Category:** Programming languages
 - **Difficulty:** Easy
@@ -40,6 +40,10 @@ print(output.readallS())
 
   
   ### Level 1 - set-register.
+  Ở level này mình sẽ làm việc với thanh ghi ```registers``` bạn sẽ dược sửa đổi hoặc đọc các thanh ghi. Vui lòng hãy thiết lập các mục sau: ```rdi = 0x1337```.
+
+  #### Lời giải
+  Áp dụng soucre trên mình chỉ cần điền nội dung mà mình muốn thực hiện ở ```dòng code thứ 4```. Dựa vào đề bài mình có được thanh ghi ```rdi``` là một dạng truyền tham số ban đầu vào khi gọi hàm hoặc hệ thống. hương đi của mình là cần truyền dữ liệu đầu vào lên thanh ghi ```rdi```, dữ liệu đầu vào ở level nàylà ```0x1337```. Trước tiên mình cần tạo một 
   - 
 
 
