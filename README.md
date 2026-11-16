@@ -391,21 +391,272 @@ pwn.college{oBEUyV8iUsoxDCP5a3bHtOm6Uro.dlTOxwCM2EDOzIzW}
 
 ---
 
+### Level 9 Byte-extraction
+Ở cấp độ này, bạn sẽ làm việc với các thanh ghi. Bạn sẽ được yêu cầu chỉnh sửa hoặc đọc từ các thanh ghi.
+
+Chúng ta sẽ thiết lập một số giá trị trong bộ nhớ động trước mỗi lần chạy. Ở mỗi lần chạy, các giá trị sẽ thay đổi. Điều này có nghĩa là bạn sẽ cần thực hiện một loại thao tác công thức với các thanh ghi. Chúng tôi sẽ cho bạn biết trước những thanh ghi nào được thiết lập và bạn nên đặt kết quả ở đâu. Trong hầu hết các trường hợp, đó là .rax
+
+Ở cấp độ này, bạn sẽ làm việc với logic bit và các phép toán. Điều này đòi hỏi phải sử dụng nhiều việc tương tác trực tiếp với các bit được lưu trữ trong thanh ghi hoặc vị trí bộ nhớ. Bạn cũng có thể cần sử dụng các lệnh logic trong x86: ```and, or,  not, xor```.
+
+Việc dịch chuyển các chi tiết trong quá trình lắp ráp cũng là một ý tưởng thú vị!
+
+x86 cho phép bạn ```'dịch chuyển'```  các bit trong thanh giấy.
+
+Lấy ví dụ, 8 bit nhỏ nhất (hoặc 8 bit có ý nghĩa thấp nhất) của .```al rax```
+
+Giá trị trong (tính bằng bit) là:```al```
+
+```rax = 10001010```
+Nếu ta dịch sang trái một lần theo lệnh sau: ```shl ```
+
+```shl al, 1```
+Giá trị mới là:
+
+```al = 00010100```
+Mọi thứ dịch chuyển sang trái, và bit cao nhất (hoặc quan trọng nhất) rơi ra trong khi một số 0 mới được thêm vào bên phải.
+
+Bạn có thể dùng nó để làm những điều đặc biệt với những phần bạn quan tâm.
+
+- Dịch chuyển có tác dụng phụ là nhân nhanh (nhân 2) hoặc chia (2), và cũng có thể dùng để tính modulo.
+
+- Dưới đây là những hướng dẫn quan trọng:
+
+```
+shl reg1, reg2 <=> Dịch sang trái theo lượng trong reg1reg2
+shr reg1, reg2 <=> Dịch sang phải theo lượng trong reg1reg2
+```
+- Lưu ý: 'reg2' có thể được thay thế bằng hằng số hoặc vị trí bộ nhớ.
+
+Khi nói về significant bit hoặc least significant byte, ý nghĩa là:
+
+Least significant bit/byte mang giá trị nhỏ nhất (vị trí "thấp nhất"). 
+
+- Khi bạn thay đổi bit "thấp nhất" hoặc "bên phải nhất", giá trị chỉ thay đổi 1 đơn vị.
+- Most significant bit/byte mang giá trị lớn nhất (vị trí "cao nhất").
+
+Đối với thử thách này, chỉ sử dụng các hướng dẫn sau:
+
+```mov, , shrshl```
+
+Vui lòng thực hiện các bước sau: Đặt thành byte ít ý nghĩa thứ 5 của .```(rax -> rdi)```
+
+Ví dụ:
+
+```
+rdi = | B7 | B6 | B5 | B4 | B3 | B2 | B1 | B0 |
+Set rax to the value of B4
+```
+
+#### Lời giải
+
+- Đối với bài này mình sẽ sử dụng lệnh ```mov, shl, shr``` để giải. Đề yêu cầu mình đặt byte có giá trị nhỏ nhất ở vi trí thứ 5 của thanh ghi ```rdi```.
+- Hướng tư duy: Nhìn vào giản đồ mà đề cung cấp mình nhận thấy ngay vị trí có giá tri nhỏ nhất là ở ```B0``` thế nên việc của mình cần là làm sao đặt giá trị ở vị trí thứ 5 tức ```B4``` vào vị trí ```B0```. Cụ thể:
+
+- mov rax , rdi
+- shr rax , 32      ## đẩy các giá trị của thanh ghi sang phải 32 bit
+- shl rax , 56
+- shr rax , 56
+
+- 2 lệnh ở cuổi có ý nghĩa là: Sau khi đẩy các giá trị của thanh ghi ```rdi``` sang phải 32 bit thì mình đã vô tình kéo theo các ```bit rác``` tràn vào các vị trí ```B7 B6 B5```. Do đó mình cần đẩy các giá trị đó ra khỏi thanh ghi.
 
 
 
+```
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+mov rax , rdi
+shr rax , 32
+shl rax , 56
+shr rax , 56
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+```
+--- 
+#### Flag
+pwn.college{gY5oYfT4lyuebseZvfzSqYGuZL4.dBDMywCM2EDOzIzW}
+
+### Level 10 Bitwise-and 
+Ở cấp độ này, bạn sẽ làm việc với các thanh ghi. Bạn sẽ được yêu cầu chỉnh sửa hoặc đọc từ các thanh ghi.
+
+Chúng ta sẽ thiết lập một số giá trị trong bộ nhớ động trước mỗi lần chạy. Ở mỗi lần chạy, các giá trị sẽ thay đổi. Điều này có nghĩa là bạn sẽ cần thực hiện một loại thao tác công thức với các thanh ghi. Chúng tôi sẽ cho bạn biết trước những thanh ghi nào được thiết lập và bạn nên đặt kết quả ở đâu. Trong hầu hết các trường hợp, đó là .rax
+
+Ở cấp độ này, bạn sẽ làm việc với logic bit và các phép toán. Điều này đòi hỏi phải sử dụng nhiều việc tương tác trực tiếp với các bit được lưu trữ trong thanh ghi hoặc vị trí bộ nhớ. Bạn cũng có thể cần sử dụng các lệnh logic trong x86: ```and, or, not, xor```
+
+- ```Logic - bitwise``` trong hợp ngữ cũng là một khái niệm thú vị! 
+
+- x86 cho phép bạn thực hiện các phép toán logic từng bit trên các thanh ghi.
+
+Trong ví dụ này, giả sử các thanh ghi chỉ lưu trữ 8 bit.
+
+Các giá trị trong và là:```rax rbx```
+
+```
+rax = 10101010
+rbx = 00110011
+```
+
+Nếu chúng ta thực hiện một bit AND của và sử dụng lệnh này, kết quả sẽ được tính bằng cách AND từng cặp bit một, do đó nó được gọi là logic bitwise giữa 2 thanh ghi rax và  rbx có khối lệnh là:
+
+```and rax, rbx```
+
+Vậy từ trái sang phải:
+
+```
+1 VÀ 0 = 0
+0 VÀ 0 = 0
+1 VÀ 1 = 1
+0 VÀ 1 = 0
+...
+Cuối cùng, chúng tôi kết hợp các kết quả lại để thu được:
+
+```rax = 00100010```
+Dưới đây là một số bảng chân lý để tham khảo:
+
+- And
+
+```
+A | B | X
+---+---+---
+0 | 0 | 0
+0 | 1 | 0
+1 | 0 | 0
+1 | 1 | 1
+- OR
+
+```
+A | B | X
+---+---+---
+0 | 0 | 0
+0 | 1 | 1
+1 | 0 | 1
+1 | 1 | 1
+```
+
+- XOR
+```
+A | B | X
+---+---+---
+0 | 0 | 0
+0 | 1 | 1
+1 | 0 | 1
+1 | 1 | 0
+```
+Không sử dụng các hướng dẫn sau:  mov,  xchg
+
+Vui lòng thực hiện các bước sau:
+
+Đặt thành giá trị của rax(rdi AND rsi)
+
+LƯU Ý: sẽ đặt tất cả các bit thành Nếu không thì màn này sẽ khó hơn!rax1
+
+#### lời giải 
+- ở bài này đề không cho sử dụng lệnh ```mov``` nên mình sẽ dùng một lệnh logic đó là ``` and ``` để đặt giá trị của thanh rax qua phép ```and``` của 2 thanh ghi ``rdi`` và ```rsi```.
+Cụ thể:
+
+
+- and rax , rdi
+- and rax, rsi
 
 
 
+```
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+and rax , rdi
+and rax, rsi
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+```
+---
+#### Flag 
+pwn.college{8qbV99i3ISTu71w_ctVZaZVYQ6E.dFDMywCM2EDOzIzW}
+
+### Level 11 Check-even
+Ở cấp độ này, bạn sẽ làm việc với các thanh ghi. Bạn sẽ được yêu cầu chỉnh sửa hoặc đọc từ các thanh ghi.
+
+Chúng ta sẽ thiết lập một số giá trị trong bộ nhớ động trước mỗi lần chạy. Ở mỗi lần chạy, các giá trị sẽ thay đổi. Điều này có nghĩa là bạn sẽ cần thực hiện một loại thao tác công thức với các thanh ghi. Chúng tôi sẽ cho bạn biết trước những thanh ghi nào được thiết lập và bạn nên đặt kết quả ở đâu. Trong hầu hết các trường hợp, nó là .```rax ```
+
+Ở cấp độ này, bạn sẽ làm việc với logic bit và các phép toán. Điều này đòi hỏi phải sử dụng nhiều việc tương tác trực tiếp với các bit được lưu trữ trong thanh ghi hoặc vị trí bộ nhớ. Bạn cũng có thể cần sử dụng các lệnh logic trong x86:  ```and or not xor```
+
+Chỉ sử dụng các hướng dẫn sau: ```and, or, xor```
+
+Triển khai logic sau:
+```
+if x is even then
+  y = 1
+else
+  y = 0
+```
+
+Trong đó:
+
+x = rdi
+y = rax
+
+#### Lời giải
+- Để giải được level này mình cần phải làm quen với các lệnh logic trong x86:
+ **And**(phép và) -> ```mặt nạ lọc và xóa bit```:
++ Nguyên lí trả về 1 nếu cả 2 bit đều là 1. Bất kì bit nào khi thực hiện phép và với số 0 thì giá trị trả về sẽ là 0.
++ Chức năng chính là trích xuất một bit/bytes cụ thể và dọn sạch các bit rác xung quanh
+
+**Or**(phép hoặc)-> ```bật hay thiết lập bit ```
++ Nguyên lý: Trả về 1 nếu có ít nhất một bit là 1. Bất kỳ bit nào OR với 1 đều chắc chắn trở thành 1, OR với 0 thì giữ nguyên giá trị cũ.
+
++ Chức năng chính: Dùng để chủ động bật một hoặc nhiều bit cụ thể lên 1 mà không làm hỏng dữ liệu của các bit khác.
+
+**XOR** (Phép HOẶC LOẠI TRỪ) - Đảo bit và Xóa trắng:
+
+- Nguyên lý: Trả về 1 nếu hai bit có giá trị khác biệt nhau, và trả về 0 nếu chúng giống nhau.
+
+- Chức năng 1 (Đảo bit - Toggle): Bất kỳ bit nào XOR với 1 cũng sẽ bị đảo ngược (0 thành 1, 1 thành 0).
+
+- Chức năng 2 (Xóa trắng thanh ghi cực nhanh): Trong Assembly, xor rax, rax là tiêu chuẩn vàng để gán thanh ghi về giá trị 0. Vì mọi bit so sánh với chính nó đều trả về 0, lệnh này dọn sạch thanh ghi nhanh và tốn ít dung lượng mã máy hơn lệnh ```mov rax, 0```.
+
+
+**Not**(Phép PHỦ ĐỊNH) - Đảo ngược toàn cục:
+
+- Nguyên lý: Là lệnh chỉ có một toán hạng(Phép toán một ngôi). Nó lật ngược trạng thái của toàn bộ 64 bit trong thanh ghi cùng một lúc (1 biến thành 0, và 0 biến thành 1).
+
+- Để giải quyết bài tập trên mình sẽ sử dụng lệnh ```and or và xor```. Để dễ hình dung về bài tập này thì có một tips có thể áp dụng đó là: để kiểm tra tính chẳn lẻ của một thanh ghi thì chỉ phụ thuộc vào vị trí có giá trị bit thấp nhất là vị trí số 0, do đó trước khi thực hiện việc kiểm tra mình nên đặt lại các giá trị cho thanh ghi rdi cso mặt nạ ```0x1``` có nghĩa là cấc vị trí bit từ 1 dến 63 đều bằng 0 chỉ giữ lại giá trị ở vị trí số 0. Tiếp theo là mình sẽ xóa trắng thanh ghi rax để việc so sánh được thực hiện một cách chính xác nhất, tiếp theo mình sẽ thực hiện bật bit lên một của thanh ghi ```rax``` phù hợp với nguyên lí của  phép hoặc loại trừ ```xor```. Cụ thể:
+
+- and rdi , 0x1
+- and rax , 0
+- or rax , 1
+- xor rax , rdi
 
 
 
+```
+import pwn
 
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
 
+asm = """
+and rdi , 0x1
+and rax , 0
+or rax , 1
+xor rax , rdi
+"""
 
-
-
-
+output.write(pwn.asm(asm))
+print(output.readallS())
+```
+---
+#### Flag
+pwn.college{khUzUPsOBWHOYTiEoUicuDncROq.dJDMywCM2EDOzIzW}
 
 
 
