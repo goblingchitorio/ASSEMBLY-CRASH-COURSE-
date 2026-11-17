@@ -659,6 +659,139 @@ print(output.readallS())
 pwn.college{khUzUPsOBWHOYTiEoUicuDncROq.dJDMywCM2EDOzIzW}
 
 
+### Level 12 Memory-read
+Bây giờ chúng ta sẽ thiết lập một số giá trị trong bộ nhớ một cách động trước mỗi lần chạy. Ở mỗi lần chạy, các giá trị sẽ thay đổi. Điều này có nghĩa là bạn sẽ cần thực hiện một loại thao tác công thức với các thanh ghi. Chúng tôi sẽ cho bạn biết trước những thanh ghi nào được thiết lập và bạn nên đặt kết quả ở đâu. Trong hầu hết các trường hợp, đó là .rax
+
+Ở cấp độ này, bạn sẽ làm việc với trí nhớ. Điều này sẽ yêu cầu bạn đọc hoặc ghi vào các dữ liệu được lưu trữ tuyến tính trong bộ nhớ. Nếu bạn bối rối, hãy xem module địa chỉ tuyến tính trong 'ike. Bạn cũng có thể được yêu cầu tham chiếu các mục, có thể nhiều lần, đến những thứ chúng tôi ghi nhớ động cho bạn sử dụng.
+
+Cho đến nay, bạn đã làm việc với thanh ghi như cách duy nhất để lưu trữ các thứ, về cơ bản là các biến như 'x' trong toán học.
+
+Tuy nhiên, chúng ta cũng có thể lưu byte vào bộ nhớ!
+
+- Hãy nhớ rằng bộ nhớ có thể được địa chỉ, và mỗi địa chỉ chứa một thứ gì đó tại vị trí đó. Lưu ý rằng điều này tương tự như địa chỉ trong đời thực!
+
+Ví dụ: địa chỉ thật '699 S Mill Ave, Tempe, AZ 85281' được gán cho 'ASU Brickyard'. Chúng tôi cũng cho rằng nó chỉ đến 'ASU Brickyard'. Ta có thể biểu diễn như sau:
+
+``` ['699 S Mill Ave, Tempe, AZ 85281'] = 'ASU Brickyard'```
+- Địa chỉ này đặc biệt vì nó độc nhất. Nhưng điều đó cũng không có nghĩa là các địa chỉ khác không thể chỉ ra điều tương tự (vì ai đó có thể có nhiều nhà).
+
+Trí nhớ thì hoàn toàn giống nhau!
+
+Ví dụ, địa chỉ trong bộ nhớ nơi mã của bạn được lưu trữ (khi chúng tôi lấy nó từ bạn) là .0x400000
+
+- Trong x86, ta có thể truy cập vật thể tại một vị trí bộ nhớ, gọi là dereferencing, như sau:
+
+``` mov rax, [some_address]        <=>     Moves the thing at 'some_address' into rax```
+- Điều này cũng áp dụng với các thành phần trong thanh ghi:
+
+``` mov rax, [rdi]         <=>     Moves the thing stored at the address of what rdi holds to rax```
+- Cách này cũng hoạt động tương tự khi ghi vào bộ nhớ:
+
+``` mov [rax], rdi         <=>     Moves rdi to the address of what rax holds.```
+- Vậy nếu là , thì sẽ được lưu tại địa chỉ :rax0xdeadbeefrdi0xdeadbeef
+
+```[0xdeadbeef] = rdi```
+Lưu ý: Bộ nhớ là tuyến tính, và trong x86_64, nó chuyển từ (vâng, rất lớn).00xffffffffffffffff
+
+Vui lòng thực hiện các bước sau: Đặt giá trị lưu trữ tại vào . Đảm bảo giá trị trong là giá trị gốc được lưu tại .0x404000 rax
+
+#### Lời giải
+- Ở level này mình sẽ dùng lệnh ```mov``` nhưng khác với bài ```set-register``` lệnh ```mov``` dùng cho level này có kèm theo một vị trí cụ thể trong ram, nhiệm vụ của máy tính sẽ đến vị trí cụ thể đó gán giá trị vào trong thanh ghi. Cụ thể
+ 
+-  mov rax , [0x404000]
+
+
+
+```
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+mov rax , [0x404000]  ##đi vào vị trí [0x404000] trong ram và tiến hành gán  giá trị vào thanh ghi rax
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+```
+---
+#### Flag
+pwn.college{QudYN_QJLRR_AEpKKQTjnWH7rCO.QXyEDOzwCM2EDOzIzW}
+
+### Level 13 Memory-write
+Bây giờ chúng ta sẽ thiết lập một số giá trị trong bộ nhớ một cách động trước mỗi lần chạy. Ở mỗi lần chạy, các giá trị sẽ thay đổi. Điều này có nghĩa là bạn sẽ cần thực hiện một loại thao tác công thức với các thanh ghi. Chúng tôi sẽ cho bạn biết trước những thanh ghi nào được thiết lập và bạn nên đặt kết quả ở đâu. Trong hầu hết các trường hợp, đó là .rax
+
+Ở cấp độ này, bạn sẽ làm việc với trí nhớ. Điều này sẽ yêu cầu bạn đọc hoặc ghi vào các dữ liệu được lưu trữ tuyến tính trong bộ nhớ. Nếu bạn bối rối, hãy xem module địa chỉ tuyến tính trong 'ike. Bạn cũng có thể được yêu cầu tham chiếu các mục, có thể nhiều lần, đến những thứ chúng tôi ghi nhớ động cho bạn sử dụng.
+
+Vui lòng thực hiện các bước sau: Đặt giá trị lưu trữ vào .```rax 0x404000```
+
+#### Lời giải
+- Để giải bài này mình sẽ sử dụng lệnh ```mov```. Cụ thể:
+ 
+- mov [0x404000] , rax
+
+
+```
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+mov [0x404000], rax  ##đi vào thanh ghi rax và tiến hành gán giá trị vào vị trí [0x404000]
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+```
+
+---
+
+#### Flag
+pwn.college{UpiSd3qcXeLHVs7R7UWKI2Qq3fA.QXzEDOzwCM2EDOzIzW}
+
+
+#### Level 14 memory-increment
+Bây giờ chúng ta sẽ thiết lập một số giá trị trong bộ nhớ một cách động trước mỗi lần chạy. Ở mỗi lần chạy, các giá trị sẽ thay đổi. Điều này có nghĩa là bạn sẽ cần thực hiện một loại thao tác công thức với các thanh ghi. Chúng tôi sẽ cho bạn biết trước những thanh ghi nào được thiết lập và bạn nên đặt kết quả ở đâu. Trong hầu hết các trường hợp, đó là .rax
+
+Ở cấp độ này, bạn sẽ làm việc với trí nhớ. Điều này sẽ yêu cầu bạn đọc hoặc ghi vào các dữ liệu được lưu trữ tuyến tính trong bộ nhớ. Nếu bạn bối rối, hãy xem module địa chỉ tuyến tính trong 'ike. Bạn cũng có thể được yêu cầu tham chiếu các mục, có thể nhiều lần, đến những thứ chúng tôi ghi nhớ động cho bạn sử dụng.
+
+Vui lòng thực hiện các bước sau:
+
+Đặt giá trị lưu trữ tại 0x404000 vào rax.
+Tăng giá trị lưu trữ tại địa chỉ bằng .0x404000 0x1337
+Đảm bảo giá trị trong là giá trị gốc được lưu tại và đảm bảo rằng bây giờ có giá trị tăng thêm.rax0x404000 [0x404000].
+
+#### Lời giải
+-Để giải được level này mình dùng lệnh mov và add. Để cộng thêm giá trị lưu trữ tại địa chỉ lưu trữ ```[0x404000]``` bằng 0x1337 thì mình sẽ dùng thanh ghi ```rdi``` để làm trạm trung gian. Cụ thể:
+
+- mov rax , [0x404000]
+- mov rdi , 0x1337
+- add [0x404000] , rdi
+
+- Đây là một cách làm thông minh ghi dùng thanh ghi ```rdi``` làm trung gian vừa có thể giữ nguyên giá trị gán từ vị trí [0x404000] vào thanh ghi rax ,mà vẫn tăng thêm giá trị  ở vị trí [0x404000] thêm [0x404000].
+
+```
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+mov rax , [0x404000]
+mov rdi , 0x1337
+add [0x404000], rdi
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+```
+
+---
+
+#### Flag
+pwn.college{k3yWWs5QNh4psa6PH4bc1mLDQdw.dNDMywCM2EDOzIzW}
 
 
 
