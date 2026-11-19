@@ -793,6 +793,174 @@ print(output.readallS())
 #### Flag
 pwn.college{k3yWWs5QNh4psa6PH4bc1mLDQdw.dNDMywCM2EDOzIzW}
 
+### Level 15 bytes-accsess
+Bây giờ chúng ta sẽ thiết lập một số giá trị trong bộ nhớ một cách động trước mỗi lần chạy. Ở mỗi lần chạy, các giá trị sẽ thay đổi. Điều này có nghĩa là bạn sẽ cần thực hiện một loại thao tác công thức với các thanh ghi. Chúng tôi sẽ cho bạn biết trước những thanh ghi nào được thiết lập và bạn nên đặt kết quả ở đâu. Trong hầu hết các trường hợp, đó là .rax
+
+Ở cấp độ này, bạn sẽ làm việc với trí nhớ. Điều này sẽ yêu cầu bạn đọc hoặc ghi vào các dữ liệu được lưu trữ tuyến tính trong bộ nhớ. Nếu bạn bối rối, hãy xem module địa chỉ tuyến tính trong 'ike. Bạn cũng có thể được yêu cầu tham chiếu các mục, có thể nhiều lần, đến những thứ chúng tôi ghi nhớ động cho bạn sử dụng.
+
+Hãy nhớ rằng các thanh ghi trong x86_64 rộng 64 bit, nghĩa là chúng có thể lưu 64 bit. Tương tự, mỗi vị trí bộ nhớ có thể được xử lý dưới dạng giá trị 64 bit. Chúng ta gọi một thứ có 64 bit (8 byte) là một từ bốn tứ.
+
+Dưới đây là phân tích tên các kích thước bộ nhớ:
+
+Quad Word = 8 Byte = 64 bit
+Double Word = 4 byte = 32 bit
+Word = 2 byte = 16 bit
+Byte = 1 byte = 8 bit
+Trong x86_64, bạn có thể truy cập từng kích thước này khi tham chiếu địa chỉ, giống như việc sử dụng các thanh ghi lớn hơn hoặc nhỏ hơn:
+
+```
+mov al, [address] <=> di chuyển byte ít quan trọng nhất từ địa chỉ đến rax
+mov ax, [address] <=> di chuyển từ ít quan trọng nhất từ địa chỉ sang rax
+mov eax, [address] <=> di chuyển từ đôi ít quan trọng nhất từ địa chỉ đến rax
+mov rax, [address] <=> di chuyển toàn bộ từ tứ từ từ sang rax
+```
+
+Hãy nhớ rằng việc di chuyển vào không làm sạch hoàn toàn các byte phía trên ```al```
+
+Vui lòng thực hiện các bước sau: Đặt thành byte của ```rax``` thành ```0x404000```
+
+#### Lời giải
+- Để giải bài này mình dùng lệnh ```mov``` gán giá trị của byte ít quan trọng nhất thanh ghi ```rax``` thành giá trị tại vị trí ```0x404000```. Cụ thể:
+ 
+- mov al , [0x404000]
+
+
+```
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+mov al , [0x404000]
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+```
+
+---
+#### Flag
+pwn.college{kCMGm-phPKTauGjP-Sqwg9X7jh2.QX0EDOzwCM2EDOzIzW}
+
+
+### Level 16 Memory-size-access
+Bây giờ chúng ta sẽ thiết lập một số giá trị trong bộ nhớ một cách động trước mỗi lần chạy. Ở mỗi lần chạy, các giá trị sẽ thay đổi. Điều này có nghĩa là bạn sẽ cần thực hiện một loại thao tác công thức với các thanh ghi. Chúng tôi sẽ cho bạn biết trước những thanh ghi nào được thiết lập và bạn nên đặt kết quả ở đâu. Trong hầu hết các trường hợp, đó là .rax
+
+Ở cấp độ này, bạn sẽ làm việc với trí nhớ. Điều này sẽ yêu cầu bạn đọc hoặc ghi vào các dữ liệu được lưu trữ tuyến tính trong bộ nhớ. Nếu bạn bối rối, hãy xem module địa chỉ tuyến tính trong 'ike. Bạn cũng có thể được yêu cầu tham chiếu các mục, có thể nhiều lần, đến những thứ chúng tôi ghi nhớ động cho bạn sử dụng.
+
+Hãy nhớ rằng các thanh ghi trong x86_64 rộng 64 bit, nghĩa là chúng có thể lưu 64 bit. Tương tự, mỗi vị trí bộ nhớ có thể được xử lý dưới dạng giá trị 64 bit. Chúng ta gọi một thứ có 64 bit (8 byte) là một từ bốn tứ.
+
+Dưới đây là phân tích tên các kích thước bộ nhớ:
+
+Quad Word = 8 Byte = 64 bit
+Double Word = 4 byte = 32 bit
+Word = 2 byte = 16 bit
+Byte = 1 byte = 8 bit
+Trong x86_64, bạn có thể truy cập từng kích thước này khi tham chiếu địa chỉ, giống như việc sử dụng các thanh ghi lớn hơn hoặc nhỏ hơn:
+
+```
+mov al, [address] <=> di chuyển byte ít quan trọng nhất từ địa chỉ đến rax
+mov ax, [address] <=> di chuyển từ ít quan trọng nhất từ địa chỉ sang rax
+mov eax, [address] <=> di chuyển từ đôi ít quan trọng nhất từ địa chỉ đến rax
+mov rax, [address] <=> di chuyển toàn bộ từ tứ từ từ sang rax
+```
+
+Vui lòng thực hiện theo các yêu cầu sau:
+
+- Đặt giá trị của thanh byte ít quan trọng nhất trong thanh rax tại 0x404000.
+- Đặt giá trị của ```word``` trong thanh rbx tại 0x404000.
+- Đặt giá trị của ```double word``` trong thanh rcx tại 0x404000.
+- Đặt giá trị của ```quad word``` trong thanh rdx tại 0x404000.
+
+#### Lời giải
+- Để giải level này mình sẽ dùng lệnh ```mov``` như bài trên. Cụ thể
+- mov al , [0x404000]
+- mov bx , [0x404000]
+- mov ecx , [0x404000]
+- mov rdx , [0x404000]
+
+
+
+```
+import pwn
+
+pwn.context.update(arch="amd64")
+output = pwn.process("/challenge/run")
+
+asm = """
+mov al , [0x404000]
+mov bx , [0x404000]
+mov ecx , [0x404000]
+mov rdx , [0x404000]
+"""
+
+output.write(pwn.asm(asm))
+print(output.readallS())
+```
+
+---
+#### Flag
+pwn.college{46JzpDy4McRQkyznLc40ztkBDq3.dRDMywCM2EDOzIzW}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
